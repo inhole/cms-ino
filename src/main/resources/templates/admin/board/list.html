@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+    <title>Board Management</title>
+</head>
+<body>
+    <!-- Page Title -->
+    <h1 layout:fragment="page-title">Board Management</h1>
+
+    <!-- Breadcrumb -->
+    <ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Home</a></li>
+        <li class="breadcrumb-item active">Boards</li>
+    </ol>
+
+    <!-- Content -->
+    <div layout:fragment="content">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Board List</h3>
+                <div class="card-tools">
+                    <a th:href="@{/admin/boards/create}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Create Board
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Display Name</th>
+                            <th>Posting</th>
+                            <th>Attachment</th>
+                            <th>Comment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="board : ${boards}">
+                            <td th:text="${board.boardId}">1</td>
+                            <td th:text="${board.boardNm}">Notice</td>
+                            <td th:text="${board.boardViewNm}">Notice</td>
+                            <td>
+                                <span th:class="${board.postYn ? 'badge badge-success' : 'badge badge-secondary'}"
+                                      th:text="${board.postYn ? 'Y' : 'N'}">Y</span>
+                            </td>
+                            <td>
+                                <span th:class="${board.fileYn ? 'badge badge-success' : 'badge badge-secondary'}"
+                                      th:text="${board.fileYn ? 'Y' : 'N'}">Y</span>
+                            </td>
+                            <td>
+                                <span th:class="${board.replyYn ? 'badge badge-success' : 'badge badge-secondary'}"
+                                      th:text="${board.replyYn ? 'Y' : 'N'}">Y</span>
+                            </td>
+                            <td>
+                                <a th:href="@{/admin/boards/{id}/edit(id=${board.boardId})}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form th:action="@{/admin/boards/{id}/delete(id=${board.boardId})}" method="post" style="display: inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this board?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(boards)}">
+                            <td colspan="7" class="text-center text-muted py-4">No boards found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

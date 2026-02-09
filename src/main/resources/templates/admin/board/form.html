@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+    <title th:text="${board.boardId != null ? 'Edit Board' : 'Create Board'}">Board</title>
+</head>
+<body>
+    <!-- Page Title -->
+    <h1 layout:fragment="page-title" th:text="${board.boardId != null} ? 'Edit Board' : 'Create Board'">Board Form</h1>
+
+    <!-- Breadcrumb -->
+    <ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Home</a></li>
+        <li class="breadcrumb-item"><a th:href="@{/admin/boards}">Boards</a></li>
+        <li class="breadcrumb-item active" th:text="${board.boardId != null ? 'Edit' : 'Create'}">Form</li>
+    </ol>
+
+    <!-- Content -->
+    <div layout:fragment="content">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" th:text="${board.boardId != null ? 'Edit Board' : 'New Board'}">Board Form</h3>
+            </div>
+            <form th:action="${board.boardId != null ? '/admin/boards/' + board.boardId + '/edit' : '/admin/boards/create'}"
+                  th:object="${board}" method="post">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="boardNm">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="boardNm" th:field="*{boardNm}"
+                               required placeholder="Enter board name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="boardViewNm">Display Name</label>
+                        <input type="text" class="form-control" id="boardViewNm" th:field="*{boardViewNm}"
+                               placeholder="Enter display name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="boardDesc">Description</label>
+                        <textarea class="form-control" id="boardDesc" th:field="*{boardDesc}" rows="4"
+                                  placeholder="Enter board description"></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="useYn" th:field="*{useYn}">
+                                    <label class="custom-control-label" for="useYn">Enabled</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="postYn" th:field="*{postYn}">
+                                    <label class="custom-control-label" for="postYn">Allow Posting</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="fileYn" th:field="*{fileYn}">
+                                    <label class="custom-control-label" for="fileYn">Allow Attachment</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="replyYn" th:field="*{replyYn}">
+                                    <label class="custom-control-label" for="replyYn">Allow Comment</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="categoryYn" th:field="*{categoryYn}">
+                            <label class="custom-control-label" for="categoryYn">Use Category</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                    <a th:href="@{/admin/boards}" class="btn btn-default">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

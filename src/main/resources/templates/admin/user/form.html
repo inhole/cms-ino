@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+    <title th:text="${isNew ? 'Create User' : 'Edit User'}">User</title>
+</head>
+<body>
+    <!-- Page Title -->
+    <h1 layout:fragment="page-title" th:text="${isNew ? 'Create User' : 'Edit User'}">User</h1>
+
+    <!-- Breadcrumb -->
+    <ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Home</a></li>
+        <li class="breadcrumb-item"><a th:href="@{/admin/users}">Users</a></li>
+        <li class="breadcrumb-item active" th:text="${isNew ? 'Create' : 'Edit'}">Form</li>
+    </ol>
+
+    <!-- Content -->
+    <div layout:fragment="content">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" th:text="${isNew ? 'New User' : 'Edit User Information'}">User Form</h3>
+            </div>
+            <form th:action="@{/admin/users}" th:object="${user}" method="post">
+                <div class="card-body">
+                    <input type="hidden" th:field="*{id}" />
+
+                    <div class="form-group">
+                        <label for="userId">User ID <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="userId" th:field="*{userId}"
+                               required th:readonly="${!isNew}"
+                               placeholder="Enter user ID">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="userPwd" th:text="${isNew ? 'Password' : 'Password (fill only to change)'}">Password</label>
+                        <span class="text-danger" th:if="${isNew}">*</span>
+                        <input type="password" class="form-control" id="userPwd" th:field="*{userPwd}"
+                               th:required="${isNew}" placeholder="Enter password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="userName">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="userName" th:field="*{userName}"
+                               required placeholder="Enter name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="userEmail">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="userEmail" th:field="*{userEmail}"
+                               required placeholder="Enter email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="text" class="form-control" id="phone" th:field="*{phone}"
+                               placeholder="Enter phone number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="userLevel">Role <span class="text-danger">*</span></label>
+                        <select class="form-control" id="userLevel" th:field="*{userLevel}" required>
+                            <option value="">Select role</option>
+                            <option value="ADMIN">ADMIN</option>
+                            <option value="MANAGER">MANAGER</option>
+                            <option value="USER">USER</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="useYn">Status <span class="text-danger">*</span></label>
+                        <select class="form-control" id="useYn" th:field="*{useYn}" required>
+                            <option th:value="true">Enabled</option>
+                            <option th:value="false">Disabled</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="memo">Memo</label>
+                        <textarea class="form-control" id="memo" th:field="*{memo}" rows="4"
+                                  placeholder="Enter memo"></textarea>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                    <a th:href="@{/admin/users}" class="btn btn-default">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

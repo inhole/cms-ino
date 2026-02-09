@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 대시보드</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        .welcome {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .info-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #667eea;
+        }
+        .info-value {
+            color: #333;
+        }
+        .user-type {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>사용자 대시보드</h1>
+        <div class="welcome">
+            환영합니다, <strong th:text="${username}">사용자</strong>님!
+            <span class="user-type">일반 사용자</span>
+        </div>
+
+        <div class="info-card" th:if="${user}">
+            <h2 style="color: #667eea; margin-bottom: 15px;">내 정보</h2>
+            <div class="info-row">
+                <span class="info-label">아이디:</span>
+                <span class="info-value" th:text="${user.userId}">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">이름:</span>
+                <span class="info-value" th:text="${user.userName}">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">이메일:</span>
+                <span class="info-value" th:text="${user.userEmail}">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">전화번호:</span>
+                <span class="info-value" th:text="${user.phone}">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">회원 유형:</span>
+                <span class="info-value" th:text="${user.type}">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">사용 여부:</span>
+                <span class="info-value" th:text="${user.useYn}">-</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="/user/profile" class="btn btn-primary">프로필 수정</a>
+            <a href="/logout" class="btn btn-secondary">로그아웃</a>
+        </div>
+    </div>
+</body>
+</html>

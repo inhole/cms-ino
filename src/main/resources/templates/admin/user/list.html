@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+    <title>User Management</title>
+</head>
+<body>
+    <!-- Page Title -->
+    <h1 layout:fragment="page-title">User Management</h1>
+
+    <!-- Breadcrumb -->
+    <ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Home</a></li>
+        <li class="breadcrumb-item active">Users</li>
+    </ol>
+
+    <!-- Content -->
+    <div layout:fragment="content">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">User List</h3>
+                <div class="card-tools">
+                    <a th:href="@{/admin/users/new}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Create User
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div th:if="${message}" class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <i class="icon fas fa-check"></i> <span th:text="${message}"></span>
+                </div>
+                <div th:if="${error}" class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <i class="icon fas fa-ban"></i> <span th:text="${error}"></span>
+                </div>
+
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Last Login</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="user : ${users}">
+                            <td th:text="${user.id}">1</td>
+                            <td th:text="${user.userId}">admin</td>
+                            <td th:text="${user.userName}">Admin</td>
+                            <td th:text="${user.userEmail}">admin@example.com</td>
+                            <td th:text="${user.phone}">010-0000-0000</td>
+                            <td>
+                                <span class="badge badge-primary" th:text="${user.userLevel}">ADMIN</span>
+                            </td>
+                            <td>
+                                <span th:class="${user.useYn ? 'badge badge-success' : 'badge badge-danger'}"
+                                      th:text="${user.useYn ? 'Enabled' : 'Disabled'}">Enabled</span>
+                            </td>
+                            <td th:text="${user.lastLoginDt != null ? #temporals.format(user.lastLoginDt, 'yyyy-MM-dd HH:mm') : '-'}">-</td>
+                            <td>
+                                <a th:href="@{/admin/users/{id}(id=${user.id})}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form th:action="@{/admin/users/{id}/delete(id=${user.id})}" method="post" style="display: inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this user?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(users)}">
+                            <td colspan="9" class="text-center text-muted py-4">No users found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

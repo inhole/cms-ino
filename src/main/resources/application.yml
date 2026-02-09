@@ -1,0 +1,18 @@
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
+  # 다국어 메시지 설정
+  messages:
+    basename: messages/messages
+    encoding: UTF-8
+    use-code-as-default-message: true
+    fallback-to-system-locale: false
+
+  # Thymeleaf 설정
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+

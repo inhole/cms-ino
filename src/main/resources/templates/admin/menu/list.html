@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+    <title>Menu Management</title>
+</head>
+<body>
+    <!-- Page Title -->
+    <h1 layout:fragment="page-title">Menu Management</h1>
+
+    <!-- Breadcrumb -->
+    <ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Home</a></li>
+        <li class="breadcrumb-item active">Menus</li>
+    </ol>
+
+    <!-- Content -->
+    <div layout:fragment="content">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Menu List</h3>
+                <div class="card-tools">
+                    <a th:href="@{/admin/menus/create}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Create Menu
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>URL</th>
+                            <th>Type</th>
+                            <th>Open</th>
+                            <th>Order</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="menu : ${menus}">
+                            <td th:text="${menu.menuId}">1</td>
+                            <td th:text="${menu.menuNm}">Home</td>
+                            <td th:text="${menu.url}">/</td>
+                            <td>
+                                <span class="badge badge-info" th:text="${menu.menuType}">LINK</span>
+                            </td>
+                            <td>
+                                <span th:class="${menu.openYn ? 'badge badge-success' : 'badge badge-secondary'}"
+                                      th:text="${menu.openYn ? 'Y' : 'N'}">Y</span>
+                            </td>
+                            <td th:text="${menu.menuOrd}">1</td>
+                            <td>
+                                <a th:href="@{/admin/menus/{id}/edit(id=${menu.menuId})}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form th:action="@{/admin/menus/{id}/delete(id=${menu.menuId})}" method="post" style="display: inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this menu?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(menus)}">
+                            <td colspan="7" class="text-center text-muted py-4">No menus found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
