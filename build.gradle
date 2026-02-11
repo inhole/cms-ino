@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '4.0.2'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.graalvm.buildtools.native' version '0.10.4' // GraalVM Native Image 플러그인
 }
 
 group = 'com'
@@ -30,6 +31,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+//    implementation 'org.springframework.book:spring-boot-starter-opentelemetry' // OpenTelemetry 지원
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
@@ -48,4 +51,24 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// GraalVM native-image 기본 설정
+graalvmNative {
+    // toolchainDetection을 비활성화하면 명시적으로 GRAALVM_HOME/ORG.GRAALVM.HOME 지정 가능
+    // 필요하면 true로 두고 JAVA_HOME이 GraalVM을 가리키게 하세요.
+    toolchainDetection.set(true)
+
+    binaries {
+        main {
+            imageName = 'cms-ino'
+            // 필요 시 추가 JVM 옵션이나 런타임 옵션을 설정할 수 있습니다.
+            // buildArgs.addAll(['--no-fallback'])
+        }
+    }
+
+    // 추적 에이전트를 사용하려면 agent.enabled를 true로 하고 앱을 실행해서 트레이스 데이터를 수집하세요.
+    // agent {
+    //     enabled = false
+    // }
 }

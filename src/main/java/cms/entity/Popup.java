@@ -24,14 +24,17 @@ public class Popup extends BaseEntity {
     @Column(name = "POP_TITLE", length = 2000, nullable = false)
     private String popTitle;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "OPEN_YN", length = 1)
     private Boolean openYn = true;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "PERIOD_YN", length = 1)
     private Boolean periodYn = false;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "END_YN", length = 1)
     private Boolean endYn = true;

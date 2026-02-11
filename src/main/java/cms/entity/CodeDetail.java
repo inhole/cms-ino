@@ -34,6 +34,7 @@ public class CodeDetail extends BaseEntity {
     @Column(name = "SORT_ORD")
     private BigDecimal sortOrd;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "USE_YN", length = 1)
     private Boolean useYn = true;

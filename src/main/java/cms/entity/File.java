@@ -59,6 +59,7 @@ public class File extends BaseEntity {
     @Column(name = "FILE_URL", columnDefinition = "LONGTEXT")
     private String fileUrl;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "DEL_YN", length = 1)
     private Boolean delYn = false;

@@ -24,6 +24,7 @@ public class Code extends BaseEntity {
     @Column(name = "CODE_DESC", length = 200)
     private String codeDesc;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "USE_YN", length = 1)
     private Boolean useYn = true;

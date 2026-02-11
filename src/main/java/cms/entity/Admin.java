@@ -33,10 +33,12 @@ public class Admin extends BaseEntity {
     @Column(name = "PHONE", length = 30)
     private String phone;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "USE_YN", length = 1)
     private Boolean useYn = true;
 
+    @Builder.Default
     @Column(name = "USER_LEVEL", length = 20)
     private String userLevel = "ADMIN";
 

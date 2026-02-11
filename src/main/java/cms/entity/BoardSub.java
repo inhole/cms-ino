@@ -38,21 +38,26 @@ public class BoardSub extends BaseEntity {
     @Column(name = "NTT_ANSWER", columnDefinition = "LONGTEXT")
     private String nttAnswer;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "NTT_ANSWER_YN", length = 1)
     private Boolean nttAnswerYn = false;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "TOP_YN", length = 1)
     private Boolean topYn = false;
 
+    @Builder.Default
     @Column(name = "CNT")
     private BigDecimal cnt = BigDecimal.ZERO;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "DEL_YN", length = 1)
     private Boolean delYn = false;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "OPEN_YN", length = 1)
     private Boolean openYn = true;
@@ -60,6 +65,7 @@ public class BoardSub extends BaseEntity {
     @Column(name = "SEQ_NUM")
     private Integer seqNum;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "TEMP_SAVE_YN", length = 1)
     private Boolean tempSaveYn = false;
@@ -74,6 +80,7 @@ public class BoardSub extends BaseEntity {
     @Column(name = "RECEIPT_ID", length = 20)
     private String receiptId;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "REPLY_YN", length = 1)
     private Boolean replyYn = true;

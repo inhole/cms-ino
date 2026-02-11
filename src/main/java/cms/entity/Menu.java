@@ -27,19 +27,23 @@ public class Menu extends BaseEntity {
     @Column(name = "MENU_NM", length = 2000, nullable = false)
     private String menuNm;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "OPEN_YN", length = 1)
     private Boolean openYn = false;
 
+    @Builder.Default
     @Column(name = "LANG_TYPE", length = 20, nullable = false)
     private String langType = "KR";
 
     @Column(name = "MENU_TYPE", length = 20)
     private String menuType;
 
+    @Builder.Default
     @Column(name = "UPPER_MENU_ID", length = 20)
     private String upperMenuId = "ROOT";
 
+    @Builder.Default
     @Column(name = "MENU_ORD", nullable = false)
     private BigDecimal menuOrd = BigDecimal.ONE;
 

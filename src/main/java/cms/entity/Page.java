@@ -14,8 +14,9 @@ import lombok.*;
 public class Page extends BaseEntity {
 
     @Id
-    @Column(name = "PAGE_ID", length = 45)
-    private String pageId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "PAGE_ID")
+    private Long pageId;
 
     @Column(name = "DOMAIN_ID", length = 20)
     private String domainId;

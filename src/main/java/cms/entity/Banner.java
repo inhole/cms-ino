@@ -21,6 +21,7 @@ public class Banner extends BaseEntity {
     @Column(name = "BANNER_NM", length = 100, nullable = false)
     private String bannerNm;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "USE_YN", length = 1)
     private Boolean useYn = true;

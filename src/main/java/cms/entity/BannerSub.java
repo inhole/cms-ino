@@ -49,6 +49,7 @@ public class BannerSub extends BaseEntity {
     @Column(name = "LINK_URL", length = 100)
     private String linkUrl;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "LINK_BLK_YN", length = 1)
     private Boolean linkBlkYn = false;
@@ -59,9 +60,11 @@ public class BannerSub extends BaseEntity {
     @Column(name = "THUM_SUB_TITLE")
     private String thumSubTitle;
 
+    @Builder.Default
     @Column(name = "TEXT_ALIGN", length = 1)
     private String textAlign = "L";
 
+    @Builder.Default
     @Column(name = "MO_EFF", length = 6)
     private String moEff = "N";
 

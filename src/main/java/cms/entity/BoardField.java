@@ -28,10 +28,12 @@ public class BoardField {
     @Column(name = "FIELD_NM", length = 100)
     private String fieldNm;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "REQUIRED_YN", length = 1)
     private Boolean requiredYn = false;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "USE_YN", length = 1)
     private Boolean useYn = false;

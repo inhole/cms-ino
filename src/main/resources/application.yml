@@ -2,6 +2,10 @@ spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:local}
 
+  threads:
+    virtual:
+      enabled: true
+
   # 다국어 메시지 설정
   messages:
     basename: messages/messages

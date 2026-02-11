@@ -36,6 +36,7 @@ public class Board extends BaseEntity {
     @Column(name = "CONTENT_TEMPLATE_ID")
     private Long contentTemplateId;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "USE_YN", length = 1)
     private Boolean useYn = true;
@@ -52,6 +53,7 @@ public class Board extends BaseEntity {
     @Column(name = "BLIND_YN", length = 1)
     private Boolean blindYn;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "CATEGORY_YN", length = 1)
     private Boolean categoryYn = true;
@@ -68,6 +70,7 @@ public class Board extends BaseEntity {
     @Column(name = "HEADER_CONTENTS", columnDefinition = "LONGTEXT")
     private String headerContents;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "POST_YN", length = 1)
     private Boolean postYn = true;
@@ -76,6 +79,7 @@ public class Board extends BaseEntity {
     @Column(name = "REPLY_YN", length = 1)
     private Boolean replyYn;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "TOTAL_SEARCH_YN", length = 1)
     private Boolean totalSearchYn = false;
@@ -98,6 +102,7 @@ public class Board extends BaseEntity {
     @Column(name = "RETURN_URL", length = 1000)
     private String returnUrl;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "BOARD_MORE_BTN_YN", length = 1)
     private Boolean boardMoreBtnYn = false;
@@ -115,9 +120,10 @@ public class Board extends BaseEntity {
     @Column(name = "BOTTOM_CONTENTS", columnDefinition = "LONGTEXT")
     private String bottomContents;
 
+    @Builder.Default
     @Convert(converter = BooleanToYNConverter.class)
     @Column(name = "BOTTOM_YN", length = 1)
-    private Boolean bottomYn;
+    private Boolean bottomYn = false;
 
     @Column(name = "SEO_TITLE", length = 300)
     private String seoTitle;
