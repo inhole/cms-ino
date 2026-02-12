@@ -4,6 +4,7 @@ import cms.common.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,13 +23,45 @@ public class SecurityConfig {
     private final CustomAuthenticationSuccessHandler successHandler;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    @Order(1)
+    public SecurityFilterChain adminFilterChain(HttpSecurity http) throws Exception {
         http
-            // register custom authentication provider so our UserDetailsService + PasswordEncoder are used
+            .securityMatcher("/admin/**")
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/user/login", "/user/register", "/h2-console/**", "/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/admin/login").permitAll()
                 .requestMatchers("/admin/**").hasAnyRole("ADMIN", "MANAGER")
+                .anyRequest().denyAll()
+            )
+            .formLogin(form -> form
+                .loginPage("/admin/login")
+                .loginProcessingUrl("/admin/login")
+                .successHandler(successHandler)
+                .failureUrl("/admin/login?error")
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/admin/logout")
+                .logoutSuccessUrl("/admin/login?logout")
+                .permitAll()
+            )
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/h2-console/**")
+            )
+            .headers(headers -> headers
+                .frameOptions(frameOptions -> frameOptions.sameOrigin())
+            );
+
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
+    public SecurityFilterChain userFilterChain(HttpSecurity http) throws Exception {
+        http
+            .authenticationProvider(authenticationProvider())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/", "/login", "/user/register", "/h2-console/**", "/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/user/**").hasRole("USER")
                 .anyRequest().authenticated()
             )

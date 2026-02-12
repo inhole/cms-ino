@@ -8,21 +8,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class LoginController {
 
-    @GetMapping("/login")
-    public String login(@RequestParam(required = false) String error,
-                       @RequestParam(required = false) String logout,
-                       Model model) {
+    @GetMapping("/admin/login")
+    public String adminLogin(@RequestParam(required = false) String error,
+                             @RequestParam(required = false) String logout,
+                             @RequestParam(required = false) String roleError,
+                             Model model) {
         if (error != null) {
             model.addAttribute("error", true);
         }
         if (logout != null) {
             model.addAttribute("logout", true);
         }
+        if (roleError != null) {
+            model.addAttribute("roleError", true);
+        }
         return "admin/login";
-    }
-
-    @GetMapping("/")
-    public String home() {
-        return "redirect:/admin/dashboard";
     }
 }

@@ -10,13 +10,34 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
 
     private final FrontUserService userService;
 
-    @GetMapping("/dashboard")
+    @GetMapping("/login")
+    public String userLogin(@RequestParam(required = false) String error,
+                            @RequestParam(required = false) String logout,
+                            @RequestParam(required = false) String roleError,
+                            Model model) {
+        if (error != null) {
+            model.addAttribute("error", true);
+        }
+        if (logout != null) {
+            model.addAttribute("logout", true);
+        }
+        if (roleError != null) {
+            model.addAttribute("roleError", true);
+        }
+        return "front/login";
+    }
+
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/login";
+    }
+
+    @GetMapping("/user/dashboard")
     public String dashboard(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         if (userDetails != null) {
             UserDto user = userService.findByUserId(userDetails.getUsername());
@@ -27,7 +48,7 @@ public class UserController {
         return "front/dashboard";
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/user/profile")
     public String profile(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         if (userDetails != null) {
             UserDto user = userService.findByUserId(userDetails.getUsername());
@@ -36,7 +57,7 @@ public class UserController {
         return "front/profile";
     }
 
-    @PostMapping("/profile/update")
+    @PostMapping("/user/profile/update")
     public String updateProfile(@AuthenticationPrincipal UserDetails userDetails,
                                 @ModelAttribute UserDto userDto) {
         UserDto currentUser = userService.findByUserId(userDetails.getUsername());

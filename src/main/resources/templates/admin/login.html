@@ -26,12 +26,17 @@
                 <i class="icon fas fa-ban"></i> Invalid username or password.
             </div>
 
+            <div th:if="${param.roleError}" class="alert alert-warning alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <i class="icon fas fa-exclamation-triangle"></i> Admin or Manager role is required.
+            </div>
+
             <div th:if="${param.logout}" class="alert alert-success alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <i class="icon fas fa-check"></i> Logged out successfully.
             </div>
 
-            <form th:action="@{/login}" method="post">
+            <form th:action="@{/admin/login}" method="post">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
                 <div class="input-group mb-3">
