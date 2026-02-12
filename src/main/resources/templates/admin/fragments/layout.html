@@ -89,13 +89,35 @@
                             <p>Board Management</p>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a th:href="@{/admin/users}"
+                    <li class="nav-item"
+                        th:classappend="${#strings.contains(uri, '/admin/users')} ? 'menu-open' : ''">
+                        <a href="#"
                            class="nav-link"
                            th:classappend="${#strings.contains(uri, '/admin/users')} ? 'active' : ''">
                             <i class="nav-icon fas fa-users"></i>
-                            <p>User Management</p>
+                            <p>
+                                User Management
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
                         </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a th:href="@{/admin/users/admin}"
+                                   class="nav-link"
+                                   th:classappend="${#strings.contains(uri, '/admin/users/admin')} ? 'active' : ''">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Admin</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{/admin/users/user}"
+                                   class="nav-link"
+                                   th:classappend="${#strings.contains(uri, '/admin/users/user')} ? 'active' : ''">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>User</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </nav>

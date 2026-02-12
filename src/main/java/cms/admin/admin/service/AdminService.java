@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Locale;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,18 @@ public class AdminService {
 
     public List<AdminDto> findAll() {
         return userRepository.findAll().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<AdminDto> findAdmins() {
+        return userRepository.findByUserLevelOrderByIdDesc("ADMIN").stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<AdminDto> findUsers() {
+        return userRepository.findByUserLevelNotOrderByIdDesc("ADMIN").stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
@@ -63,7 +76,7 @@ public class AdminService {
         admin.setUserEmail(dto.getUserEmail());
         admin.setPhone(dto.getPhone());
         admin.setUseYn(dto.getUseYn());
-        admin.setUserLevel(dto.getUserLevel());
+        admin.setUserLevel(dto.getUserLevel() == null ? null : dto.getUserLevel().toUpperCase(Locale.ROOT));
         admin.setMemo(dto.getMemo());
 
         // Only update password if provided

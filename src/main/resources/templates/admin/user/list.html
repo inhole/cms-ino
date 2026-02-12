@@ -7,21 +7,22 @@
 </head>
 <body>
     <!-- Page Title -->
-    <h1 layout:fragment="page-title">User Management</h1>
+    <h1 layout:fragment="page-title" th:text="${userTypeLabel + ' Management'}">User Management</h1>
 
     <!-- Breadcrumb -->
     <ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Home</a></li>
-        <li class="breadcrumb-item active">Users</li>
+        <li class="breadcrumb-item">User Management</li>
+        <li class="breadcrumb-item active" th:text="${userTypeLabel}">Users</li>
     </ol>
 
     <!-- Content -->
     <div layout:fragment="content">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">User List</h3>
+                <h3 class="card-title" th:text="${userTypeLabel + ' List'}">User List</h3>
                 <div class="card-tools">
-                    <a th:href="@{/admin/users/new}" class="btn btn-primary btn-sm">
+                    <a th:href="@{/admin/users/new(type=${userType})}" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus"></i> Create User
                     </a>
                 </div>
@@ -66,10 +67,10 @@
                             </td>
                             <td th:text="${user.lastLoginDt != null ? #temporals.format(user.lastLoginDt, 'yyyy-MM-dd HH:mm') : '-'}">-</td>
                             <td>
-                                <a th:href="@{/admin/users/{id}(id=${user.id})}" class="btn btn-info btn-sm">
+                                <a th:href="@{/admin/users/{id}(id=${user.id},type=${userType})}" class="btn btn-info btn-sm">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form th:action="@{/admin/users/{id}/delete(id=${user.id})}" method="post" style="display: inline;">
+                                <form th:action="@{/admin/users/{id}/delete(id=${user.id},userType=${userType})}" method="post" style="display: inline;">
                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this user?')">
                                         <i class="fas fa-trash"></i>
                                     </button>
