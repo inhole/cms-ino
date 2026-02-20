@@ -3,96 +3,74 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/fragments/layout}">
 <head>
-    <title th:text="${isNew ? 'Create User' : 'Edit User'}">User</title>
+    <title th:text="${isNew ? '사용자 등록' : '사용자 수정'}">사용자</title>
 </head>
 <body>
-    <!-- Page Title -->
-    <h1 layout:fragment="page-title" th:text="${isNew ? 'Create User' : 'Edit User'}">User</h1>
+<h1 layout:fragment="page-title" th:text="${isNew ? '사용자 등록' : '사용자 수정'}">사용자</h1>
+<ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
+    <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">홈</a></li>
+    <li class="breadcrumb-item"><a th:href="@{${listPath}}">사용자</a></li>
+    <li class="breadcrumb-item active" th:text="${isNew ? '등록' : '수정'}">등록</li>
+</ol>
 
-    <!-- Breadcrumb -->
-    <ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Home</a></li>
-        <li class="breadcrumb-item"><a th:href="@{${listPath}}">Users</a></li>
-        <li class="breadcrumb-item active" th:text="${isNew ? 'Create' : 'Edit'}">Form</li>
-    </ol>
-
-    <!-- Content -->
-    <div layout:fragment="content">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title" th:text="${isNew ? 'New User' : 'Edit User Information'}">User Form</h3>
-            </div>
-            <form th:action="@{/admin/users(type=${userType})}" th:object="${user}" method="post">
-                <div class="card-body">
-                    <input type="hidden" th:field="*{id}" />
-                    <input type="hidden" name="userType" th:value="${userType}" />
-
-                    <div class="form-group">
-                        <label for="userId">User ID <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="userId" th:field="*{userId}"
-                               required th:readonly="${!isNew}"
-                               placeholder="Enter user ID">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="userPwd" th:text="${isNew ? 'Password' : 'Password (fill only to change)'}">Password</label>
-                        <span class="text-danger" th:if="${isNew}">*</span>
-                        <input type="password" class="form-control" id="userPwd" th:field="*{userPwd}"
-                               th:required="${isNew}" placeholder="Enter password">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="userName">Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="userName" th:field="*{userName}"
-                               required placeholder="Enter name">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="userEmail">Email <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control" id="userEmail" th:field="*{userEmail}"
-                               required placeholder="Enter email">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="phone">Phone</label>
-                        <input type="text" class="form-control" id="phone" th:field="*{phone}"
-                               placeholder="Enter phone number">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="userLevel">Role <span class="text-danger">*</span></label>
-                        <select class="form-control" id="userLevel" th:field="*{userLevel}" required>
-                            <option value="">Select role</option>
-                            <option value="ADMIN">ADMIN</option>
-                            <option value="MANAGER">MANAGER</option>
-                            <option value="USER">USER</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="useYn">Status <span class="text-danger">*</span></label>
-                        <select class="form-control" id="useYn" th:field="*{useYn}" required>
-                            <option th:value="true">Enabled</option>
-                            <option th:value="false">Disabled</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="memo">Memo</label>
-                        <textarea class="form-control" id="memo" th:field="*{memo}" rows="4"
-                                  placeholder="Enter memo"></textarea>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Save
-                    </button>
-                    <a th:href="@{${listPath}}" class="btn btn-default">
-                        <i class="fas fa-times"></i> Cancel
-                    </a>
-                </div>
-            </form>
+<div layout:fragment="content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title" th:text="${isNew ? '신규 사용자' : '사용자 정보 수정'}">사용자</h3>
         </div>
+        <form th:action="@{/admin/users(type=${userType})}" th:object="${user}" method="post">
+            <div class="card-body">
+                <input type="hidden" th:field="*{id}" />
+                <input type="hidden" name="userType" th:value="${userType}" />
+
+                <div class="form-group">
+                    <label for="userId">사용자 ID <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="userId" th:field="*{userId}" required th:readonly="${!isNew}" placeholder="사용자 ID를 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="userPwd" th:text="${isNew ? '비밀번호' : '비밀번호 (변경 시에만 입력)'}">비밀번호</label>
+                    <span class="text-danger" th:if="${isNew}">*</span>
+                    <input type="password" class="form-control" id="userPwd" th:field="*{userPwd}" th:required="${isNew}" placeholder="비밀번호를 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="userName">이름 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="userName" th:field="*{userName}" required placeholder="이름을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">이메일 <span class="text-danger">*</span></label>
+                    <input type="email" class="form-control" id="userEmail" th:field="*{userEmail}" required placeholder="이메일을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="phone">전화번호</label>
+                    <input type="text" class="form-control" id="phone" th:field="*{phone}" placeholder="전화번호를 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="userLevel">권한 <span class="text-danger">*</span></label>
+                    <select class="form-control" id="userLevel" th:field="*{userLevel}" required>
+                        <option value="">권한을 선택하세요</option>
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="MANAGER">MANAGER</option>
+                        <option value="USER">USER</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="useYn">상태 <span class="text-danger">*</span></label>
+                    <select class="form-control" id="useYn" th:field="*{useYn}" required>
+                        <option th:value="true">사용</option>
+                        <option th:value="false">중지</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="memo">메모</label>
+                    <textarea class="form-control" id="memo" th:field="*{memo}" rows="4" placeholder="메모를 입력하세요"></textarea>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> 저장</button>
+                <a th:href="@{${listPath}}" class="btn btn-default"><i class="fas fa-times"></i> 취소</a>
+            </div>
+        </form>
     </div>
+</div>
 </body>
 </html>

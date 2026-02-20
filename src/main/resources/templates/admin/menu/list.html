@@ -3,73 +3,141 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/fragments/layout}">
 <head>
-    <title>Menu Management</title>
+    <title>메뉴 관리</title>
+    <style>
+        #menuTableBody tr { cursor: move; }
+        .drag-handle { color: #6c757d; margin-right: 6px; }
+        .menu-actions form { display: inline; }
+        .meta { color: #6c757d; font-size: .9rem; }
+    </style>
 </head>
 <body>
-    <!-- Page Title -->
-    <h1 layout:fragment="page-title">Menu Management</h1>
+<h1 layout:fragment="page-title">메뉴 관리</h1>
+<ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
+    <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">홈</a></li>
+    <li class="breadcrumb-item active">메뉴</li>
+</ol>
 
-    <!-- Breadcrumb -->
-    <ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Home</a></li>
-        <li class="breadcrumb-item active">Menus</li>
-    </ol>
-
-    <!-- Content -->
-    <div layout:fragment="content">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Menu List</h3>
-                <div class="card-tools">
-                    <a th:href="@{/admin/menus/create}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-plus"></i> Create Menu
-                    </a>
-                </div>
-            </div>
-            <div class="card-body">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>URL</th>
-                            <th>Type</th>
-                            <th>Open</th>
-                            <th>Order</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="menu : ${menus}">
-                            <td th:text="${menu.menuId}">1</td>
-                            <td th:text="${menu.menuNm}">Home</td>
-                            <td th:text="${menu.url}">/</td>
-                            <td>
-                                <span class="badge badge-info" th:text="${menu.menuType}">LINK</span>
-                            </td>
-                            <td>
-                                <span th:class="${menu.openYn ? 'badge badge-success' : 'badge badge-secondary'}"
-                                      th:text="${menu.openYn ? 'Y' : 'N'}">Y</span>
-                            </td>
-                            <td th:text="${menu.menuOrd}">1</td>
-                            <td>
-                                <a th:href="@{/admin/menus/{id}/edit(id=${menu.menuId})}" class="btn btn-info btn-sm">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form th:action="@{/admin/menus/{id}/delete(id=${menu.menuId})}" method="post" style="display: inline;">
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this menu?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(menus)}">
-                            <td colspan="7" class="text-center text-muted py-4">No menus found.</td>
-                        </tr>
-                    </tbody>
-                </table>
+<div layout:fragment="content">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0">메뉴 목록</h3>
+            <div class="d-flex align-items-center" style="gap:8px;">
+                <a th:href="@{/admin/menus(lang='KR')}" class="btn btn-sm"
+                   th:classappend="${lang == 'KR'} ? 'btn-primary' : 'btn-default'">KR</a>
+                <a th:href="@{/admin/menus(lang='EN')}" class="btn btn-sm"
+                   th:classappend="${lang == 'EN'} ? 'btn-primary' : 'btn-default'">EN</a>
+                <a th:href="@{/admin/menus(lang='JP')}" class="btn btn-sm"
+                   th:classappend="${lang == 'JP'} ? 'btn-primary' : 'btn-default'">JP</a>
+                <a th:href="@{/admin/menus/create(lang=${lang})}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> 메뉴 등록
+                </a>
+                <button id="saveOrderBtn" type="button" class="btn btn-success btn-sm">
+                    <i class="fas fa-save"></i> 정렬 저장
+                </button>
             </div>
         </div>
+        <div class="card-body">
+            <div th:if="${message}" class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <i class="icon fas fa-check"></i> <span th:text="${message}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <i class="icon fas fa-ban"></i> <span th:text="${error}"></span>
+            </div>
+
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width:70px;">ID</th>
+                    <th>메뉴명</th>
+                    <th style="width:120px;">타입</th>
+                    <th>URL</th>
+                    <th style="width:110px;">상위메뉴</th>
+                    <th style="width:90px;">공개</th>
+                    <th style="width:90px;">순서</th>
+                    <th style="width:120px;">관리</th>
+                </tr>
+                </thead>
+                <tbody id="menuTableBody">
+                <tr th:each="menu : ${menus}" th:attr="data-menu-id=${menu.menuId}">
+                    <td th:text="${menu.menuId}">1</td>
+                    <td>
+                        <i class="fas fa-grip-vertical drag-handle"></i>
+                        <span th:text="${menu.menuNm}">메뉴</span>
+                        <span class="meta ml-2" th:if="${menu.menuTitle != null and !#strings.isEmpty(menu.menuTitle)}"
+                              th:text="${'(' + menu.menuTitle + ')'}"></span>
+                    </td>
+                    <td><span class="badge badge-info" th:text="${menu.menuType}">LINK</span></td>
+                    <td th:text="${menu.url != null ? menu.url : '-'}">-</td>
+                    <td th:text="${menu.upperMenuId != null ? menu.upperMenuId : 'ROOT'}">ROOT</td>
+                    <td>
+                        <span th:class="${menu.openYn ? 'badge badge-success' : 'badge badge-secondary'}"
+                              th:text="${menu.openYn ? 'Y' : 'N'}">Y</span>
+                    </td>
+                    <td th:text="${menu.menuOrd}">1</td>
+                    <td class="menu-actions">
+                        <a th:href="@{/admin/menus/{id}/edit(id=${menu.menuId})}" class="btn btn-info btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form th:action="@{/admin/menus/{id}/delete(id=${menu.menuId})}" method="post">
+                            <input type="hidden" name="lang" th:value="${lang}">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('이 메뉴를 삭제하시겠습니까?')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(menus)}">
+                    <td colspan="8" class="text-center text-muted py-4">등록된 메뉴가 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+</div>
+
+<th:block layout:fragment="scripts">
+    <script src="/webjars/sortablejs/1.15.6/Sortable.min.js"></script>
+    <script>
+        (function () {
+            const lang = '[[${lang}]]';
+            const csrfToken = '[[${_csrf.token}]]';
+            const csrfHeader = '[[${_csrf.headerName}]]';
+            const tbody = document.getElementById('menuTableBody');
+            const saveBtn = document.getElementById('saveOrderBtn');
+            if (!tbody || !saveBtn) return;
+
+            Sortable.create(tbody, {
+                animation: 150,
+                handle: '.drag-handle'
+            });
+
+            saveBtn.addEventListener('click', async function () {
+                const rows = tbody.querySelectorAll('tr[data-menu-id]');
+                const payload = [];
+                rows.forEach((row, idx) => {
+                    payload.push({
+                        menuId: Number(row.dataset.menuId),
+                        parentId: null,
+                        menuOrd: idx + 1
+                    });
+                });
+                if (payload.length === 0) return;
+                const res = await fetch('/admin/menus/reorder?lang=' + encodeURIComponent(lang), {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', [csrfHeader]: csrfToken},
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    location.reload();
+                } else {
+                    alert('정렬 저장 중 오류가 발생했습니다.');
+                }
+            });
+        })();
+    </script>
+</th:block>
 </body>
 </html>

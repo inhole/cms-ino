@@ -3,81 +3,106 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/fragments/layout}">
 <head>
-    <title th:text="${menu.menuId != null ? 'Edit Menu' : 'Create Menu'}">Menu</title>
+    <title th:text="${menu.menuId != null ? '메뉴 수정' : '메뉴 등록'}">메뉴</title>
 </head>
 <body>
-    <!-- Page Title -->
-    <h1 layout:fragment="page-title" th:text="${menu.menuId != null} ? 'Edit Menu' : 'Create Menu'">Menu Form</h1>
+<h1 layout:fragment="page-title" th:text="${menu.menuId != null ? '메뉴 수정' : '메뉴 등록'}">메뉴</h1>
+<ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
+    <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">홈</a></li>
+    <li class="breadcrumb-item"><a th:href="@{/admin/menus(lang=${lang})}">메뉴</a></li>
+    <li class="breadcrumb-item active" th:text="${menu.menuId != null ? '수정' : '등록'}">등록</li>
+</ol>
 
-    <!-- Breadcrumb -->
-    <ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Home</a></li>
-        <li class="breadcrumb-item"><a th:href="@{/admin/menus}">Menus</a></li>
-        <li class="breadcrumb-item active" th:text="${menu.menuId != null ? 'Edit' : 'Create'}">Form</li>
-    </ol>
+<div layout:fragment="content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title" th:text="${menu.menuId != null ? '메뉴 수정' : '신규 메뉴'}">메뉴</h3>
+        </div>
+        <form th:action="${menu.menuId != null ? '/admin/menus/' + menu.menuId + '/edit' : '/admin/menus/create'}"
+              th:object="${menu}" method="post">
+            <div class="card-body">
+                <input type="hidden" th:field="*{langType}">
 
-    <!-- Content -->
-    <div layout:fragment="content">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title" th:text="${menu.menuId != null ? 'Edit Menu' : 'New Menu'}">Menu Form</h3>
-            </div>
-            <form th:action="${menu.menuId != null ? '/admin/menus/' + menu.menuId + '/edit' : '/admin/menus/create'}"
-                  th:object="${menu}" method="post">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="menuNm">Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="menuNm" th:field="*{menuNm}"
-                               required placeholder="Enter menu name">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="menuNm">메뉴명 <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="menuNm" th:field="*{menuNm}" required placeholder="메뉴 이름을 입력하세요">
+                        </div>
                     </div>
-
-                    <div class="form-group">
-                        <label for="url">URL</label>
-                        <input type="text" class="form-control" id="url" th:field="*{url}"
-                               placeholder="Enter URL">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="langType">Language</label>
-                        <select class="form-control" id="langType" th:field="*{langType}">
-                            <option value="KR">Korean (KR)</option>
-                            <option value="EN">English (EN)</option>
-                            <option value="JP">Japanese (JP)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="menuType">Type</label>
-                        <select class="form-control" id="menuType" th:field="*{menuType}">
-                            <option value="LINK">Link</option>
-                            <option value="BOARD">Board</option>
-                            <option value="PAGE">Page</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="menuOrd">Order</label>
-                        <input type="number" class="form-control" id="menuOrd" step="1" th:field="*{menuOrd}"
-                               placeholder="Enter display order">
-                    </div>
-
-                    <div class="form-group">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="openYn" th:field="*{openYn}">
-                            <label class="custom-control-label" for="openYn">Open</label>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="menuTitle">브라우저 타이틀</label>
+                            <input type="text" class="form-control" id="menuTitle" th:field="*{menuTitle}" placeholder="문서 타이틀을 입력하세요">
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Save
-                    </button>
-                    <a th:href="@{/admin/menus}" class="btn btn-default">
-                        <i class="fas fa-times"></i> Cancel
-                    </a>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="upperMenuId">상위 메뉴</label>
+                            <select class="form-control" id="upperMenuId" th:field="*{upperMenuId}">
+                                <option value="ROOT">최상위 메뉴</option>
+                                <option th:each="parent : ${parentMenus}"
+                                        th:if="${menu.menuId == null || parent.menuId != menu.menuId}"
+                                        th:value="${parent.menuId}"
+                                        th:text="${parent.menuNm}">상위 메뉴</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="menuType">메뉴 타입</label>
+                            <select class="form-control" id="menuType" th:field="*{menuType}">
+                                <option value="LINK">페이지 링크</option>
+                                <option value="BOARD">게시판 링크</option>
+                                <option value="EXTERNAL">외부 링크</option>
+                                <option value="GROUP">메뉴 그룹</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            </form>
-        </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="url">URL</label>
+                            <input type="text" class="form-control" id="url" th:field="*{url}" placeholder="/about 또는 https://example.com">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="menuOrd">정렬 순서</label>
+                            <input type="number" class="form-control" id="menuOrd" step="1" min="1" th:field="*{menuOrd}" placeholder="자동">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="langTypeLabel">언어</label>
+                            <input type="text" id="langTypeLabel" class="form-control" th:value="${lang}" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="menuDesc">메뉴 설명</label>
+                    <textarea class="form-control" id="menuDesc" th:field="*{menuDesc}" rows="3" placeholder="메뉴 설명을 입력하세요"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="openYn" th:field="*{openYn}">
+                        <label class="custom-control-label" for="openYn">노출(공개)</label>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> 저장</button>
+                <a th:href="@{/admin/menus(lang=${lang})}" class="btn btn-default"><i class="fas fa-times"></i> 취소</a>
+            </div>
+        </form>
     </div>
+</div>
 </body>
 </html>
