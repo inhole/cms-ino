@@ -47,20 +47,20 @@
                                 <option th:each="parent : ${parentMenus}"
                                         th:if="${menu.menuId == null || parent.menuId != menu.menuId}"
                                         th:value="${parent.menuId}"
-                                        th:text="${parent.menuNm}">상위 메뉴</option>
+                                        th:text="${parent.menuNm + ' (' + parent.menuType + ')'}">상위 메뉴</option>
                             </select>
+                            <small class="form-text text-muted">최대 3단계까지 계층 구성 가능합니다.</small>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="menuType">메뉴 타입</label>
-                            <select class="form-control" id="menuType" th:field="*{menuType}">
-                                <option value="LINK">페이지 링크</option>
-                                <option value="BOARD">게시판 링크</option>
-                                <option value="EXTERNAL">외부 링크</option>
-                                <option value="GROUP">메뉴 그룹</option>
-                            </select>
-                        </div>
+                        <select class="form-control" id="menuType" th:field="*{menuType}">
+                            <option value="LINK">페이지 링크</option>
+                            <option value="BOARD">게시판 링크</option>
+                            <option value="EXTERNAL">외부 링크</option>
+                        </select>
+                    </div>
                     </div>
                 </div>
 

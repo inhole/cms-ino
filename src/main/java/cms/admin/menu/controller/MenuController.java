@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin/menus")
@@ -28,45 +29,88 @@ public class MenuController {
     private final MenuService menuService;
 
     @GetMapping
-    public String list(@RequestParam(defaultValue = "KR") String lang, Model model) {
+    public String list(@RequestParam(defaultValue = "KR") String lang,
+                       @RequestParam(required = false) Long editId,
+                       @RequestParam(required = false, defaultValue = "create") String mode,
+                       Model model) {
+        List<Menu> menus = menuService.findByLangType(lang);
+        Menu formMenu = new Menu();
+        formMenu.setLangType(lang);
+        formMenu.setUpperMenuId("ROOT");
+        formMenu.setOpenYn(true);
+        formMenu.setMenuType("LINK");
+
+        boolean editMode = false;
+        if (editId != null) {
+            try {
+                Menu selected = menuService.findById(editId);
+                if (lang.equalsIgnoreCase(selected.getLangType())) {
+                    formMenu = selected;
+                    editMode = true;
+                }
+            } catch (RuntimeException ignored) {
+            }
+        } else if ("edit".equalsIgnoreCase(mode) && !menus.isEmpty()) {
+            formMenu = menus.get(0);
+            editMode = true;
+        }
+
         model.addAttribute("lang", lang);
-        model.addAttribute("menus", menuService.findByLangType(lang));
+        model.addAttribute("formMenu", formMenu);
+        model.addAttribute("editMode", editMode);
+        model.addAttribute("parentMenus", menus);
+        model.addAttribute("menus", menus);
+        model.addAttribute("menuItems", menus.stream()
+                .map(menu -> Map.of(
+                        "menuId", menu.getMenuId(),
+                        "menuNm", menu.getMenuNm() == null ? "" : menu.getMenuNm(),
+                        "menuType", menu.getMenuType() == null ? "LINK" : menu.getMenuType(),
+                        "menuTitle", menu.getMenuTitle() == null ? "" : menu.getMenuTitle(),
+                        "menuDesc", menu.getMenuDesc() == null ? "" : menu.getMenuDesc(),
+                        "url", menu.getUrl() == null ? "" : menu.getUrl(),
+                        "upperMenuId", menu.getUpperMenuId() == null ? "ROOT" : menu.getUpperMenuId(),
+                        "menuOrd", menu.getMenuOrd() == null ? 0 : menu.getMenuOrd(),
+                        "openYn", Boolean.TRUE.equals(menu.getOpenYn())
+                ))
+                .collect(Collectors.toList()));
         model.addAttribute("menuTree", menuService.findTreeByLangType(lang));
         return "admin/menu/list";
     }
 
     @GetMapping("/create")
     public String createForm(@RequestParam(defaultValue = "KR") String lang, Model model) {
-        Menu menu = new Menu();
-        menu.setLangType(lang);
-        model.addAttribute("menu", menu);
-        model.addAttribute("lang", lang);
-        model.addAttribute("parentMenus", menuService.findByLangType(lang));
-        return "admin/menu/form";
+        return "redirect:/admin/menus?lang=" + lang + "&mode=create";
     }
 
     @PostMapping("/create")
     public String create(@ModelAttribute Menu menu, RedirectAttributes redirectAttributes) {
-        Menu saved = menuService.save(menu);
-        redirectAttributes.addFlashAttribute("message", "메뉴가 등록되었습니다.");
-        return "redirect:/admin/menus?lang=" + saved.getLangType();
+        try {
+            Menu saved = menuService.save(menu);
+            redirectAttributes.addFlashAttribute("message", "메뉴가 등록되었습니다.");
+            return "redirect:/admin/menus?lang=" + saved.getLangType() + "&editId=" + saved.getMenuId();
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/admin/menus?lang=" + (menu.getLangType() == null ? "KR" : menu.getLangType()) + "&mode=create";
+        }
     }
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         Menu menu = menuService.findById(id);
-        model.addAttribute("menu", menu);
-        model.addAttribute("lang", menu.getLangType());
-        model.addAttribute("parentMenus", menuService.findByLangType(menu.getLangType()));
-        return "admin/menu/form";
+        return "redirect:/admin/menus?lang=" + menu.getLangType() + "&editId=" + id;
     }
 
     @PostMapping("/{id}/edit")
     public String edit(@PathVariable Long id, @ModelAttribute Menu menu, RedirectAttributes redirectAttributes) {
         menu.setMenuId(id);
-        Menu saved = menuService.save(menu);
-        redirectAttributes.addFlashAttribute("message", "메뉴가 수정되었습니다.");
-        return "redirect:/admin/menus?lang=" + saved.getLangType();
+        try {
+            Menu saved = menuService.save(menu);
+            redirectAttributes.addFlashAttribute("message", "메뉴가 수정되었습니다.");
+            return "redirect:/admin/menus?lang=" + saved.getLangType() + "&editId=" + saved.getMenuId();
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/admin/menus?lang=" + (menu.getLangType() == null ? "KR" : menu.getLangType()) + "&editId=" + id;
+        }
     }
 
     @PostMapping("/{id}/delete")
@@ -86,7 +130,11 @@ public class MenuController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> reorder(@RequestParam(defaultValue = "KR") String lang,
                                                        @RequestBody List<MenuReorderRequest> orders) {
-        menuService.reorder(lang, orders);
-        return ResponseEntity.ok(Map.of("success", true, "message", "정렬이 저장되었습니다."));
+        try {
+            menuService.reorder(lang, orders);
+            return ResponseEntity.ok(Map.of("success", true, "message", "정렬이 저장되었습니다."));
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
+        }
     }
 }
