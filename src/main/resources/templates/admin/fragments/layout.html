@@ -69,6 +69,20 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a th:href="@{/admin/mains}" class="nav-link"
+                           th:classappend="${#strings.contains(uri, '/admin/mains')} ? 'active' : ''">
+                            <i class="nav-icon fas fa-window-maximize"></i>
+                            <p>메인 관리</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/admin/pages}" class="nav-link"
+                           th:classappend="${#strings.contains(uri, '/admin/pages')} ? 'active' : ''">
+                            <i class="nav-icon fas fa-file-alt"></i>
+                            <p>페이지 관리</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a th:href="@{/admin/boards}" class="nav-link"
                            th:classappend="${#strings.contains(uri, '/admin/boards')} ? 'active' : ''">
                             <i class="nav-icon fas fa-clipboard"></i>
@@ -130,7 +144,7 @@
         <strong>Copyright &copy; 2026 <a href="#">CMS</a>.</strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
-            <b>버전</b> 1.0.0
+            <b>Version</b> 1.0.0
         </div>
     </footer>
 </div>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+    <title>페이지 관리</title>
+</head>
+<body>
+<h1 layout:fragment="page-title">페이지 관리</h1>
+<ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
+    <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">홈</a></li>
+    <li class="breadcrumb-item active">페이지 관리</li>
+</ol>
+
+<div layout:fragment="content">
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">페이지 목록</h3>
+            <div class="card-tools">
+                <a th:href="@{/admin/pages/create}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> 페이지 등록
+                </a>
+            </div>
+        </div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-bordered table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>페이지명</th>
+                    <th>표시명</th>
+                    <th>도메인 ID</th>
+                    <th>사용</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${pages}">
+                    <td th:text="${item.pageId}">1</td>
+                    <td th:text="${item.pageNm}">about</td>
+                    <td th:text="${item.pageViewNm}">회사소개</td>
+                    <td th:text="${item.domainId}">default</td>
+                    <td>
+                        <span th:class="${item.useYn ? 'badge badge-success' : 'badge badge-secondary'}"
+                              th:text="${item.useYn ? '사용' : '미사용'}">사용</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/admin/pages/{id}/edit(id=${item.pageId})}" class="btn btn-info btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form th:action="@{/admin/pages/{id}/delete(id=${item.pageId})}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('해당 페이지를 삭제하시겠습니까?')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(pages)}">
+                    <td colspan="6" class="text-center text-muted py-4">등록된 페이지가 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+    <title>메인 관리</title>
+</head>
+<body>
+<h1 layout:fragment="page-title">메인 관리</h1>
+<ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
+    <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">홈</a></li>
+    <li class="breadcrumb-item active">메인 관리</li>
+</ol>
+
+<div layout:fragment="content">
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">메인 구성 목록</h3>
+            <div class="card-tools">
+                <a th:href="@{/admin/mains/create}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> 메인 등록
+                </a>
+            </div>
+        </div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-bordered table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>도메인 ID</th>
+                    <th>비주얼 배너 ID</th>
+                    <th>일반 배너 ID</th>
+                    <th>키워드</th>
+                    <th>연결 게시판</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${mains}">
+                    <td th:text="${item.mainId}">1</td>
+                    <td th:text="${item.domainId}">1</td>
+                    <td th:text="${item.visualBannerId}">10</td>
+                    <td th:text="${item.bannerId}">20</td>
+                    <td th:text="${item.keyword}">키워드</td>
+                    <td>
+                        <span th:text="${item.connectBoardId01}">1</span>,
+                        <span th:text="${item.connectBoardId02}">2</span>,
+                        <span th:text="${item.connectBoardId03}">3</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/admin/mains/{id}/edit(id=${item.mainId})}" class="btn btn-info btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form th:action="@{/admin/mains/{id}/delete(id=${item.mainId})}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('해당 메인 구성을 삭제하시겠습니까?')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(mains)}">
+                    <td colspan="7" class="text-center text-muted py-4">등록된 메인 구성이 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

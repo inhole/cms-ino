@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+    <title th:text="${main.mainId != null ? '메인 수정' : '메인 등록'}">메인 관리</title>
+</head>
+<body>
+<h1 layout:fragment="page-title" th:text="${main.mainId != null ? '메인 수정' : '메인 등록'}">메인 관리</h1>
+<ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
+    <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">홈</a></li>
+    <li class="breadcrumb-item"><a th:href="@{/admin/mains}">메인 관리</a></li>
+    <li class="breadcrumb-item active" th:text="${main.mainId != null ? '수정' : '등록'}">등록</li>
+</ol>
+
+<div layout:fragment="content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title" th:text="${main.mainId != null ? '메인 구성 수정' : '메인 구성 등록'}">메인 구성</h3>
+        </div>
+        <form th:action="${main.mainId != null ? '/admin/mains/' + main.mainId + '/edit' : '/admin/mains/create'}"
+              th:object="${main}" method="post">
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="domainId">도메인 <span class="text-danger">*</span></label>
+                    <select id="domainId" class="form-control" th:field="*{domainId}" required>
+                        <option value="">도메인을 선택하세요</option>
+                        <option th:each="domain : ${domains}"
+                                th:value="${domain.domainId}"
+                                th:text="${domain.domainNm + ' (' + domain.domainUrl + ')'}">도메인</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="visualBannerId">비주얼 배너</label>
+                    <select id="visualBannerId" class="form-control" th:field="*{visualBannerId}">
+                        <option value="">선택 안함</option>
+                        <option th:each="banner : ${banners}"
+                                th:value="${banner.bannerId}"
+                                th:text="${banner.bannerNm}">배너</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bannerId">일반 배너</label>
+                    <select id="bannerId" class="form-control" th:field="*{bannerId}">
+                        <option value="">선택 안함</option>
+                        <option th:each="banner : ${banners}"
+                                th:value="${banner.bannerId}"
+                                th:text="${banner.bannerNm}">배너</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="keyword">메인 키워드</label>
+                    <input id="keyword" type="text" class="form-control" th:field="*{keyword}" placeholder="예: 교육, 이벤트, 추천">
+                </div>
+
+                <div class="form-group">
+                    <label for="connectBoardId01">연결 게시판 1</label>
+                    <select id="connectBoardId01" class="form-control" th:field="*{connectBoardId01}">
+                        <option value="">선택 안함</option>
+                        <option th:each="board : ${boards}"
+                                th:value="${board.boardId}"
+                                th:text="${board.boardNm}">게시판</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="connectBoardId02">연결 게시판 2</label>
+                    <select id="connectBoardId02" class="form-control" th:field="*{connectBoardId02}">
+                        <option value="">선택 안함</option>
+                        <option th:each="board : ${boards}"
+                                th:value="${board.boardId}"
+                                th:text="${board.boardNm}">게시판</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="connectBoardId03">연결 게시판 3</label>
+                    <select id="connectBoardId03" class="form-control" th:field="*{connectBoardId03}">
+                        <option value="">선택 안함</option>
+                        <option th:each="board : ${boards}"
+                                th:value="${board.boardId}"
+                                th:text="${board.boardNm}">게시판</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> 저장
+                </button>
+                <a th:href="@{/admin/mains}" class="btn btn-default">
+                    <i class="fas fa-times"></i> 취소
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

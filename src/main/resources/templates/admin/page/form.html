@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+    <title th:text="${page.pageId != null ? '페이지 수정' : '페이지 등록'}">페이지 관리</title>
+</head>
+<body>
+<h1 layout:fragment="page-title" th:text="${page.pageId != null ? '페이지 수정' : '페이지 등록'}">페이지 관리</h1>
+<ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
+    <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">홈</a></li>
+    <li class="breadcrumb-item"><a th:href="@{/admin/pages}">페이지 관리</a></li>
+    <li class="breadcrumb-item active" th:text="${page.pageId != null ? '수정' : '등록'}">등록</li>
+</ol>
+
+<div layout:fragment="content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title" th:text="${page.pageId != null ? '페이지 수정' : '페이지 등록'}">페이지</h3>
+        </div>
+        <form th:action="${page.pageId != null ? '/admin/pages/' + page.pageId + '/edit' : '/admin/pages/create'}"
+              th:object="${page}" method="post">
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="pageNm">페이지명 <span class="text-danger">*</span></label>
+                    <input id="pageNm" type="text" class="form-control" th:field="*{pageNm}" required placeholder="예: about">
+                </div>
+
+                <div class="form-group">
+                    <label for="pageViewNm">표시명</label>
+                    <input id="pageViewNm" type="text" class="form-control" th:field="*{pageViewNm}" placeholder="예: 회사소개">
+                </div>
+
+                <div class="form-group">
+                    <label for="domainId">도메인 ID</label>
+                    <input id="domainId" type="text" class="form-control" th:field="*{domainId}" placeholder="예: 1 또는 default">
+                </div>
+
+                <div class="form-group">
+                    <label for="topTemplateId">상단 템플릿</label>
+                    <select id="topTemplateId" class="form-control" th:field="*{topTemplateId}">
+                        <option value="">선택 안함</option>
+                        <option th:each="template : ${templates}"
+                                th:value="${template.templateId}"
+                                th:text="${template.templateNm}">템플릿</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="keyword">키워드</label>
+                    <input id="keyword" type="text" class="form-control" th:field="*{keyword}">
+                </div>
+
+                <div class="form-group">
+                    <label for="pageDesc">설명</label>
+                    <textarea id="pageDesc" class="form-control" th:field="*{pageDesc}" rows="2"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="pageContents">페이지 내용</label>
+                    <textarea id="pageContents" class="form-control" th:field="*{pageContents}" rows="10"></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="custom-control custom-checkbox">
+                            <input id="useYn" type="checkbox" class="custom-control-input" th:field="*{useYn}">
+                            <label class="custom-control-label" for="useYn">사용</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="custom-control custom-checkbox">
+                            <input id="tapMenuYn" type="checkbox" class="custom-control-input" th:field="*{tapMenuYn}">
+                            <label class="custom-control-label" for="tapMenuYn">탭 메뉴 노출</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> 저장
+                </button>
+                <a th:href="@{/admin/pages}" class="btn btn-default">
+                    <i class="fas fa-times"></i> 취소
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
