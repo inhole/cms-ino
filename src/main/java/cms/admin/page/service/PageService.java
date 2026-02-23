@@ -34,7 +34,7 @@ public class PageService {
     @Transactional
     public Page save(Page page) {
         if (page.getPageNm() == null || page.getPageNm().isBlank()) {
-            throw new IllegalArgumentException("Page name is required.");
+            throw new IllegalArgumentException("페이지명은 필수입니다.");
         }
         if (page.getUseYn() == null) {
             page.setUseYn(Boolean.TRUE);

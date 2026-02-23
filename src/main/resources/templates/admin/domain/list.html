@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+    <title>도메인 관리</title>
+</head>
+<body>
+<h1 layout:fragment="page-title">도메인 관리</h1>
+<ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
+    <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">홈</a></li>
+    <li class="breadcrumb-item active">도메인 관리</li>
+</ol>
+
+<div layout:fragment="content">
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">도메인 목록</h3>
+            <div class="card-tools">
+                <a th:href="@{/admin/domains/create}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> 도메인 등록
+                </a>
+            </div>
+        </div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-bordered table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>도메인명</th>
+                    <th>관리자명</th>
+                    <th>도메인 URL</th>
+                    <th>사용 여부</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${domains}">
+                    <td th:text="${item.domainId}">1</td>
+                    <td th:text="${item.domainNm}">기본 도메인</td>
+                    <td th:text="${item.domainAdminNm}">관리자</td>
+                    <td th:text="${item.domainUrl}">https://example.com</td>
+                    <td>
+                        <span th:class="${item.useYn ? 'badge badge-success' : 'badge badge-secondary'}"
+                              th:text="${item.useYn ? '사용' : '미사용'}">사용</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/admin/domains/{id}/edit(id=${item.domainId})}" class="btn btn-info btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form th:action="@{/admin/domains/{id}/delete(id=${item.domainId})}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('해당 도메인을 삭제하시겠습니까?')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(domains)}">
+                    <td colspan="6" class="text-center text-muted py-4">등록된 도메인이 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

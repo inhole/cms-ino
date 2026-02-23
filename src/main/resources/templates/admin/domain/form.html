@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragments/layout}">
+<head>
+    <title th:text="${domain.domainId != null ? '도메인 수정' : '도메인 등록'}">도메인 관리</title>
+</head>
+<body>
+<h1 layout:fragment="page-title" th:text="${domain.domainId != null ? '도메인 수정' : '도메인 등록'}">도메인 관리</h1>
+<ol layout:fragment="breadcrumb" class="breadcrumb float-sm-right">
+    <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">홈</a></li>
+    <li class="breadcrumb-item"><a th:href="@{/admin/domains}">도메인 관리</a></li>
+    <li class="breadcrumb-item active" th:text="${domain.domainId != null ? '수정' : '등록'}">등록</li>
+</ol>
+
+<div layout:fragment="content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title" th:text="${domain.domainId != null ? '도메인 수정' : '도메인 등록'}">도메인</h3>
+        </div>
+        <form th:action="${domain.domainId != null ? '/admin/domains/' + domain.domainId + '/edit' : '/admin/domains/create'}"
+              th:object="${domain}" method="post">
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="domainNm">도메인명 <span class="text-danger">*</span></label>
+                    <input id="domainNm" type="text" class="form-control" th:field="*{domainNm}" required placeholder="예: 대표 사이트">
+                </div>
+
+                <div class="form-group">
+                    <label for="domainAdminNm">관리자명</label>
+                    <input id="domainAdminNm" type="text" class="form-control" th:field="*{domainAdminNm}" placeholder="예: 홍길동">
+                </div>
+
+                <div class="form-group">
+                    <label for="domainUrl">도메인 URL</label>
+                    <input id="domainUrl" type="text" class="form-control" th:field="*{domainUrl}" placeholder="예: https://example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="cmsConn">CMS 연결 코드</label>
+                    <input id="cmsConn" type="text" class="form-control" th:field="*{cmsConn}" maxlength="1" placeholder="예: Y">
+                </div>
+
+                <div class="form-group">
+                    <label for="seoTitle">SEO 제목</label>
+                    <input id="seoTitle" type="text" class="form-control" th:field="*{seoTitle}">
+                </div>
+
+                <div class="form-group">
+                    <label for="seoDescription">SEO 설명</label>
+                    <textarea id="seoDescription" class="form-control" th:field="*{seoDescription}" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="seoKeyword">SEO 키워드</label>
+                    <textarea id="seoKeyword" class="form-control" th:field="*{seoKeyword}" rows="2"></textarea>
+                </div>
+
+                <div class="custom-control custom-checkbox">
+                    <input id="useYn" type="checkbox" class="custom-control-input" th:field="*{useYn}">
+                    <label class="custom-control-label" for="useYn">사용</label>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> 저장
+                </button>
+                <a th:href="@{/admin/domains}" class="btn btn-default">
+                    <i class="fas fa-times"></i> 취소
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

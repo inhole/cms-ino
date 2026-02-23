@@ -2,7 +2,7 @@ package cms.admin.main.service;
 
 import cms.admin.board.repository.BoardRepository;
 import cms.admin.main.repository.BannerRepository;
-import cms.admin.main.repository.DomainRepository;
+import cms.admin.main.repository.MainDomainRepository;
 import cms.admin.main.repository.MainRepository;
 import cms.entity.Banner;
 import cms.entity.Board;
@@ -20,7 +20,7 @@ import java.util.List;
 public class MainService {
 
     private final MainRepository mainRepository;
-    private final DomainRepository domainRepository;
+    private final MainDomainRepository domainRepository;
     private final BannerRepository bannerRepository;
     private final BoardRepository boardRepository;
 

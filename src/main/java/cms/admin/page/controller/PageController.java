@@ -21,14 +21,14 @@ public class PageController {
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("pageTitle", "Page Management");
+        model.addAttribute("pageTitle", "페이지 관리");
         model.addAttribute("pages", pageService.findAll());
         return "admin/page/list";
     }
 
     @GetMapping("/create")
     public String createForm(Model model) {
-        model.addAttribute("pageTitle", "Create Page");
+        model.addAttribute("pageTitle", "페이지 등록");
         model.addAttribute("page", new Page());
         model.addAttribute("templates", pageService.findTemplates());
         return "admin/page/form";
@@ -38,7 +38,7 @@ public class PageController {
     public String create(@ModelAttribute Page page, RedirectAttributes redirectAttributes) {
         try {
             pageService.save(page);
-            redirectAttributes.addFlashAttribute("message", "Page has been created.");
+            redirectAttributes.addFlashAttribute("message", "페이지가 등록되었습니다.");
             return "redirect:/admin/pages";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -48,7 +48,7 @@ public class PageController {
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
-        model.addAttribute("pageTitle", "Edit Page");
+        model.addAttribute("pageTitle", "페이지 수정");
         model.addAttribute("page", pageService.findById(id));
         model.addAttribute("templates", pageService.findTemplates());
         return "admin/page/form";
@@ -59,7 +59,7 @@ public class PageController {
         page.setPageId(id);
         try {
             pageService.save(page);
-            redirectAttributes.addFlashAttribute("message", "Page has been updated.");
+            redirectAttributes.addFlashAttribute("message", "페이지가 수정되었습니다.");
             return "redirect:/admin/pages";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -70,7 +70,7 @@ public class PageController {
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         pageService.delete(id);
-        redirectAttributes.addFlashAttribute("message", "Page has been deleted.");
+        redirectAttributes.addFlashAttribute("message", "페이지가 삭제되었습니다.");
         return "redirect:/admin/pages";
     }
 }
